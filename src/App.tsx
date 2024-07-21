@@ -3,7 +3,7 @@ import './App.css'
 function App() {
 
   return (
-    <div>
+    <div className='text-4xl text-red-600'>
       Hello
     </div>
   )
