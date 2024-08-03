@@ -7,29 +7,22 @@ import { Task } from "./utils/data-types";
 function App() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const columns = statuses.map((status) => {
-    const tasksinColumn = initialTasks.filter((task) => task.status === status);
+    const tasksInColumn = tasks.filter((task) => task.status === status); // Use the state tasks here
     return {
       title: status,
-      tasks: tasksinColumn,
+      tasks: tasksInColumn,
     };
   });
 
-  const updateTaskPoints = (task: Task, points: number) => {
-    console.log("Hello! update task points ...");
-
-    console.log("task : ", task)
-    console.log("points : ",points)
+  const updateTask = (task: Task) => {
+    console.log("updating task ...", task);
 
     const updatedTasks = tasks.map((t) => {
-      if (t.id === task.id) {
-        console.log("Inside update")
-        t.points = points
-        return t;
-      } else {
-        return t;
-      }
+      return t.id === task.id ? { ...t, ...task } : t; // Merge existing task with updated properties
     });
-    setTasks(updatedTasks);
+
+    console.log(updatedTasks);
+    setTasks(updatedTasks); // Set the updated tasks array
   };
 
   return (
@@ -37,14 +30,15 @@ function App() {
       {columns.map((col, index) => (
         <div className="flex-1 p-4" key={index}>
           <div className="flex justify-between text-2xl p-2 font-bold text-gray-500">
-          <h2 className="capitalize mb-4 mx-4">
-            {col.title}
-          </h2>
-          {col.tasks.reduce((total, task) => total + (task?.points || 0), 0)}
+            <h2 className="capitalize mb-4 mx-4">{col.title}</h2>
+            {col.tasks.reduce((total, task) => total + (task?.points || 0), 0)}
           </div>
           {col.tasks.map((task, index) => (
             <div key={index} className="mb-2">
-              <Card task={task} updateTaskPoints={updateTaskPoints} />
+              <Card
+                task={task}
+                updateTask={updateTask}
+              />
             </div>
           ))}
         </div>

@@ -4,6 +4,8 @@ export const statuses: Status[] = ["todo", "in-progress", "done"];
 
 export const priorities: Priority[] = ["low", "medium", "high"];
 
+export const MAX_POINTS = 45;
+
 export const tasks: Array<Task> = [
   {
     title: "Do Market Research",
@@ -17,7 +19,7 @@ export const tasks: Array<Task> = [
     id: "BUS-2",
     status: "in-progress",
     priority: "high",
-    points: 3,
+    points: 42,
   },
   {
     title: "Develop Marketing Strategy",
