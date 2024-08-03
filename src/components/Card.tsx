@@ -43,15 +43,24 @@ const Card = ({
     setIsDropdownOpen(false);
   };
 
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.setData("id", task.id);
+  };
+
   return (
     <div
+      draggable
+      onDragStart={handleDragStart}
       className="border rounded-lg p-2 m-2 bg-gray-100"
     >
       <div className="flex justify-between items-center">
         <div className="text-base font-medium py-2 text-start">
           <div onClick={() => setIsEditingTitle(true)}>{task.title}</div>
         </div>
-        <button onClick={() => setIsModalOpen(true)} className="bg-gray-300 rounded px-2 py-1">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-gray-300 rounded px-2 py-1"
+        >
           View
         </button>
       </div>
@@ -67,14 +76,32 @@ const Card = ({
       <div className="flex gap-4 justify-between py-2 text-gray-500">
         <div className="flex gap-2">
           <div>{task.id}</div>
-          <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="cursor-pointer">
+          <div
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="cursor-pointer"
+          >
             {priorityIcons[task.priority]}
           </div>
           {isDropdownOpen && (
             <div className="absolute bg-white border rounded shadow-lg">
-              <div onClick={() => handlePriorityChange("high")} className="p-2 cursor-pointer hover:bg-gray-200">High</div>
-              <div onClick={() => handlePriorityChange("medium")} className="p-2 cursor-pointer hover:bg-gray-200">Medium</div>
-              <div onClick={() => handlePriorityChange("low")} className="p-2 cursor-pointer hover:bg-gray-200">Low</div>
+              <div
+                onClick={() => handlePriorityChange("high")}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+              >
+                High
+              </div>
+              <div
+                onClick={() => handlePriorityChange("medium")}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+              >
+                Medium
+              </div>
+              <div
+                onClick={() => handlePriorityChange("low")}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+              >
+                Low
+              </div>
             </div>
           )}
         </div>
@@ -96,7 +123,11 @@ const Card = ({
       </div>
 
       {/* Task Modal */}
-      <TaskModal task={task} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <TaskModal
+        task={task}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
