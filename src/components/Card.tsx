@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Task } from "../utils/data-types";
 import {
   HighPriorityIcon,
@@ -11,13 +11,16 @@ import TaskModal from "./TaskModal";
 const Card = ({
   task,
   updateTask,
+  deleteTask,
 }: {
   task: Task;
   updateTask: (task: Task) => void;
+  deleteTask: (taskId: String) => void;
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const priorityIcons = {
     high: <HighPriorityIcon />,
@@ -46,6 +49,22 @@ const Card = ({
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer.setData("id", task.id);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -83,24 +102,27 @@ const Card = ({
             {priorityIcons[task.priority]}
           </div>
           {isDropdownOpen && (
-            <div className="absolute bg-white border rounded shadow-lg">
+            <div
+              ref={dropdownRef}
+              className="absolute bg-white border rounded shadow-lg"
+            >
               <div
                 onClick={() => handlePriorityChange("high")}
-                className="p-2 cursor-pointer hover:bg-gray-200"
+                className="flex p-2 cursor-pointer hover:bg-gray-200"
               >
-                High
+                {priorityIcons['high']}High
               </div>
               <div
                 onClick={() => handlePriorityChange("medium")}
-                className="p-2 cursor-pointer hover:bg-gray-200"
+                className="flex p-2 cursor-pointer hover:bg-gray-200"
               >
-                Medium
+                {priorityIcons['medium']}&nbsp;Medium
               </div>
               <div
                 onClick={() => handlePriorityChange("low")}
-                className="p-2 cursor-pointer hover:bg-gray-200"
+                className="flex p-2 cursor-pointer hover:bg-gray-200"
               >
-                Low
+                {priorityIcons['low']}Low
               </div>
             </div>
           )}
@@ -127,6 +149,8 @@ const Card = ({
         task={task}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSave={updateTask}
+        onDelete={deleteTask}
       />
     </div>
   );
