@@ -20,7 +20,7 @@ const initialTasks: Task[] = [
     id: "BUS-2",
     status: "in-progress",
     priority: "high",
-    points: 42,
+    points: 4,
     description: "Develop a comprehensive business strategy for the next quarter.",
     workedHours: 12,
     comments: ["Align with marketing goals.", "Review with stakeholders."],
