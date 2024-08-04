@@ -5,7 +5,7 @@ import {
   LowPriorityIcon,
   MediumPriorityIcon,
 } from "../utils/Icons";
-import { MAX_POINTS } from "../data";
+import { MAX_POINTS } from "../constants";
 import TaskModal from "./TaskModal";
 
 const Card = ({

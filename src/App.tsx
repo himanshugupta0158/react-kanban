@@ -1,29 +1,20 @@
-import { useState } from "react";
+import React from "react";
 import "./App.css";
 import Card from "./components/Card";
-import { tasks as initialTasks, statuses } from "./data";
-import { Status, Task } from "./utils/data-types";
+import { useTasks } from "./context/TaskContext";
+import { Status } from "./utils/data-types";
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const { tasks, updateTask } = useTasks(); // Get tasks and updateTask from context
+  const statuses: Status[] = ["todo", "in-progress", "done"]; // Define your statuses
+
   const columns = statuses.map((status) => {
-    const tasksInColumn = tasks.filter((task) => task.status === status); // Use the state tasks here
+    const tasksInColumn = tasks.filter((task) => task.status === status);
     return {
       status: status,
       tasks: tasksInColumn,
     };
   });
-
-  const updateTask = (task: Task) => {
-    console.log("updating task ...", task);
-
-    const updatedTasks = tasks.map((t) => {
-      return t.id === task.id ? { ...t, ...task } : t; // Merge existing task with updated properties
-    });
-
-    console.log(updatedTasks);
-    setTasks(updatedTasks); // Set the updated tasks array
-  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: string) => {
     e.preventDefault();
@@ -34,12 +25,6 @@ function App() {
     }
   };
 
-  const [currentlyHoveringOver, setCurrentlyHoveringOver] =
-    useState<Status | null>(null);
-  const handleDragEnter = (status: Status) => {
-    setCurrentlyHoveringOver(status);
-  };
-
   return (
     <div className="flex divide-x divide-gray-300">
       {columns.map((col, index) => (
@@ -48,7 +33,6 @@ function App() {
           key={index}
           onDrop={(e) => handleDrop(e, col.status)}
           onDragOver={(e) => e.preventDefault()}
-          onDragEnter={() => handleDragEnter(col.status)}
         >
           <div className="flex justify-between text-2xl p-2 font-bold text-gray-500">
             <h2 className="capitalize mb-4 mx-4">{col.status}</h2>
